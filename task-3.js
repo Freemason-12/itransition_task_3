@@ -5,6 +5,7 @@ const server = http.createServer(function(request, response) {
 
   if (tail.includes('maksatlego_gmail_com')) {
     const params = new URLSearchParams(request.url.slice(request.url.indexOf('?')))
+    console.log(`x is ${params.get('x')}, y is ${params.get('y')}`);
 
     if (!params.has('x') || !params.has('y')) response.end('NaN');
     else if (
