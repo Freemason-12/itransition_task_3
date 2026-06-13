@@ -5,7 +5,7 @@ const server = http.createServer(function(request, response) {
   if (tail.includes('maksatlego_gmail_com')) {
     const queryParams = tail.split('?').pop().split('&').map((p) => Number(p.split('=').pop()))
     const x = queryParams[0], y = queryParams[1];
-    if (x <= 0 || y <= 0 || x % 1 !== 0 || y % 0 !== 0) response.end('NaN');
+    if (x <= 0 || y <= 0 || x % 1 !== 0 || y % 1 !== 0) response.end('NaN');
     else {
       let lcm = x;
       while (lcm % y !== 0) lcm += x;
