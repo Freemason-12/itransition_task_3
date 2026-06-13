@@ -5,13 +5,13 @@ const server = http.createServer(function(request, response) {
 
   if (tail.includes('maksatlego_gmail_com')) {
     const params = new URLSearchParams(request.url.slice(request.url.indexOf('?')))
-    console.log(`x is ${params.get('x')}, y is ${params.get('y')}`);
+    console.log(`x is '${params.get('x')}', y is '${params.get('y')}'`);
 
     if (!params.has('x') || !params.has('y')) response.end('NaN');
     else if (
       params.get('x') === '0' || params.get('x').includes('-') || params.get('x').includes('.') ||
       params.get('y') === '0' || params.get('y').includes('-') || params.get('y').includes('.') ||
-      isNaN(Number(params.get('x'))) || isNaN(Number(params.get('y')))
+      isNaN(parseInt(params.get('x'))) || isNaN(parseInt(params.get('y')))
     ) response.end('NaN');
     else {
       const x = BigInt(parseInt(params.get('x'))), y = BigInt(parseInt(params.get('y')));
