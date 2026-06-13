@@ -1,5 +1,25 @@
 import http from 'node:http';
 
+function findLCM(params) {
+  if (!params.has('x') || !params.has('y')) return 'NaN';
+  let x = 0n, y = 0n;
+  try {
+    x = BigInt(params.get('x'));
+    y = BigInt(params.get('y'));
+  } catch (e) {
+    console.log(e);
+    return 'NaN';
+  }
+  if (x <= 0n || y <= 0n) return 'NaN';
+
+  let [b, s] = x > y ? [x, y] : [y, x];
+  while (b % s !== 0n) {
+    const rem = b % s;
+    b = s; s = rem;
+  }
+  return x * y / s;
+}
+
 const server = http.createServer(function(request, response) {
   const tail = request.url.split('/').pop();
 
@@ -8,20 +28,9 @@ const server = http.createServer(function(request, response) {
 
     console.log(`x is '${params.get('x')}', y is '${params.get('y')}'`);
 
-    if (!params.has('x') || !params.has('y')) { console.log('response is NaN'); response.end('NaN'); }
-    else if (
-      params.get('x') === '0' || params.get('x').includes('-') || params.get('x').includes('.') ||
-      params.get('y') === '0' || params.get('y').includes('-') || params.get('y').includes('.') ||
-      isNaN(parseInt(params.get('x'))) || isNaN(parseInt(params.get('y')))
-
-    ) { console.log('response is NaN'); response.end('NaN'); }
-    else {
-      const x = BigInt(parseInt(params.get('x'))), y = BigInt(parseInt(params.get('y')));
-      let lcm = x;
-      while (lcm % y !== 0n) lcm += x;
-      console.log(`response is '${lcm.toString()}'`);
-      response.end(lcm.toString());
-    }
+    const answer = findLCM(params);
+    console.log(`answer is ${answer}`);
+    response.end(answer.toString());
   }
   else {
     response.writeHead(404, 'Not found');
