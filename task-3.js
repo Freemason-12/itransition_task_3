@@ -5,18 +5,21 @@ const server = http.createServer(function(request, response) {
 
   if (tail.includes('maksatlego_gmail_com')) {
     const params = new URLSearchParams(request.url.slice(request.url.indexOf('?')))
+
     console.log(`x is '${params.get('x')}', y is '${params.get('y')}'`);
 
-    if (!params.has('x') || !params.has('y')) response.end('NaN');
+    if (!params.has('x') || !params.has('y')) { console.log('response is NaN'); response.end('NaN'); }
     else if (
       params.get('x') === '0' || params.get('x').includes('-') || params.get('x').includes('.') ||
       params.get('y') === '0' || params.get('y').includes('-') || params.get('y').includes('.') ||
       isNaN(parseInt(params.get('x'))) || isNaN(parseInt(params.get('y')))
-    ) response.end('NaN');
+
+    ) { console.log('response is NaN'); response.end('NaN'); }
     else {
       const x = BigInt(parseInt(params.get('x'))), y = BigInt(parseInt(params.get('y')));
       let lcm = x;
       while (lcm % y !== 0n) lcm += x;
+      console.log(`response is '${lcm.toString()}'`);
       response.end(lcm.toString());
     }
   }
