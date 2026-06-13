@@ -2,11 +2,18 @@ import http from 'node:http';
 
 const server = http.createServer(function(request, response) {
   const tail = request.url.split('/').pop();
+
   if (tail.includes('maksatlego_gmail_com')) {
-    const queryParams = tail.split('?').pop().split('&').map((p) => BigInt(Number(p.split('=').pop())))
-    const x = queryParams[0], y = queryParams[1];
-    if (x <= 0n || y <= 0n || x % 1n !== 0n || y % 1n !== 0n) response.end('NaN');
+    const params = new URLSearchParams(request.url.slice(request.url.indexOf('?')))
+
+    if (!params.has('x') || !params.has('y')) response.end('NaN');
+    else if (
+      params.get('x') === '0' || params.get('x').includes('-') || params.get('x').includes('.') ||
+      params.get('y') === '0' || params.get('y').includes('-') || params.get('y').includes('.') ||
+      isNaN(Number(params.get('x'))) || isNaN(Number(params.get('y')))
+    ) response.end('NaN');
     else {
+      const x = BigInt(parseInt(params.get('x'))), y = BigInt(parseInt(params.get('y')));
       let lcm = x;
       while (lcm % y !== 0n) lcm += x;
       response.end(lcm.toString());
